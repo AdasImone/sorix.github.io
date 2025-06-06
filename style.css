@@ -7,10 +7,10 @@ body {
 header {
   background-color: #ffffff;
   color: #228b22;
-  padding: 15px 20px;
+  padding: 4px 16px;
   display: flex;
   align-items: center;
-  font-size: 22px; /* sumažintas šriftas */
+  font-size: 22px;
   font-weight: bold;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
