@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+  <meta charset="UTF-8">
+  <title>SORIX.LT</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    .top-right-buttons {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: flex;
+      gap: 10px;
+      z-index: 1000;
+    }
+
+    .button {
+      background-color: #1a1a1a;
+      color: rgb(255, 255, 255);
+      border: none;
+      border-radius: 8px;
+      padding: 10px 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-family: sans-serif;
+    }
+
+    .button:hover {
+      background-color: #333;
+    }
+
+    .button i {
+      font-size: 16px;
+    }
+
+    .product-image {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    .buy-button {
+      background-color: #2c2c2c;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 20px;
+      width: 200px;
+      text-align: center;
+      margin: 0 auto;
+      display: block;
+      font-family: sans-serif;
+      transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+    }
+
+    .buy-button:hover {
+      background-color: #2d2d2d;
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+  </style>
+</head>
+<body>
+  <div class="top-right-buttons">
+    <button class="button">
+      <i class="fas fa-shopping-cart"></i>
+    </button>
+    <button class="button">
+      <i class="fas fa-user"></i>
+      Prisijungti
+    </button>
+  </div>
+
+  <header>
+    <h1>SORIX.LT</h1>
+  </header>
+
+  <main class="product-container">
+    <div class="product-card">
+      <img src="img/ryzen.jpg" alt="Ryzen 5 5600x" class="product-image">
+      <h2>Ryzen 5 5600x</h2>
+      <p><strong>€129.69</strong></p>
+      <button class="buy-button">Peržiūrėti</button>
+    </div>
+
+    <div class="product-card">
+      <img src="img/ram.jpg" alt="Corsair DDR4 2x8GB" class="product-image">
+      <h2>Corsair DDR4 2x8GB RAM 3200Mhz</h2>
+      <p><strong>€29.99</strong></p>
+      <button class="buy-button">Peržiūrėti</button>
+    </div>
+
+    <div class="product-card">
+      <img src="img/gtx1060.jpg" alt="GTX 1060 3GB" class="product-image">
+      <h2>GTX 1060 3GB</h2>
+      <p><strong>€49.99</strong></p>
+      <button class="buy-button">Peržiūrėti</button>
+    </div>
+  </main>
+</body>
+</html>
