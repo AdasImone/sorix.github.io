@@ -8,7 +8,9 @@ header {
   background-color: #ffffff;
   color: #228b22;
   padding: 10px;
+  display: flex;
   text-align: left;
+  align-items: center;
   padding-left: 60px;
   font-size: 28px;
   font-weight: bold;
