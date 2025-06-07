@@ -12,3 +12,15 @@ products.forEach(p => {
   div.innerHTML = `<h2>${p.name}</h2><p>€${p.price}</p><button>Peržiūrėti</button>`;
   container.appendChild(div);
 });
+
+const overlay = document.getElementById('overlay');
+
+cartButton.addEventListener('click', () => {
+  cartDropdown.classList.toggle('active');
+  overlay.classList.toggle('active');
+});
+
+overlay.addEventListener('click', () => {
+  cartDropdown.classList.remove('active');
+  overlay.classList.remove('active');
+});

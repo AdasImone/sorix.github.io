@@ -6,18 +6,24 @@
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background-color: #f5f5f5;
+    }
+
     .top-right-buttons {
       position: absolute;
       top: 10px;
       right: 10px;
       display: flex;
       gap: 10px;
-      z-index: 1000;
+      z-index: 1002;
     }
 
     .button {
       background-color: #228b22;
-      color: rgb(255, 255, 255);
+      color: white;
       border: none;
       border-radius: 8px;
       padding: 10px 15px;
@@ -25,7 +31,6 @@
       align-items: center;
       gap: 8px;
       cursor: pointer;
-      font-family: sans-serif;
     }
 
     .button:hover {
@@ -53,7 +58,6 @@
       text-align: center;
       margin: 0 auto;
       display: block;
-      font-family: sans-serif;
       transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
     }
 
@@ -62,47 +66,239 @@
       transform: scale(1.05);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
+
+    .cart-dropdown {
+      position: fixed;
+      top: 0;
+      right: 0;
+      height: 100vh;
+      width: 25vw;
+      background-color: white;
+      border-left: 1px solid #ddd;
+      padding: 20px;
+      box-shadow: -4px 0 20px rgba(0, 0, 0, 0.2);
+      transform: translateX(100%);
+      transition: transform 0.4s ease;
+      z-index: 1002;
+      overflow-y: auto;
+      border-top-left-radius: 12px;
+      border-bottom-left-radius: 12px;
+    }
+
+    .cart-dropdown.active {
+      transform: translateX(0%);
+    }
+
+    .cart-dropdown ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .cart-dropdown li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .cart-dropdown li button {
+      background-color: red;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      padding: 2px 6px;
+    }
+
+    .total-price {
+      margin-top: 10px;
+      font-weight: bold;
+      font-size: 16px;
+      text-align: center;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 1001;
+      display: none;
+    }
+
+    .overlay.active {
+      display: block;
+    }
+
+    .product-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 80px 20px 20px 20px;
+    }
+
+    .product-card {
+      width: 250px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 16px;
+    }
+
+    h1 a.logo {
+      text-decoration: none;
+      color: #228b22;
+      padding: 20px;
+      display: inline-block;
+    }
   </style>
 </head>
 <body>
+  <div class="overlay" id="overlay"></div>
+
   <div class="top-right-buttons">
-    <button class="button">
-      <i class="fas fa-shopping-cart"></i>
-    </button>
+    <div style="position: relative;">
+      <button class="button" id="cart-button">
+        <i class="fas fa-shopping-cart"></i>
+      </button>
+      <div class="cart-dropdown" id="cart-dropdown">
+        <p id="empty-msg">Krepšelis tuščias</p>
+        <ul id="cart-items"></ul>
+        <p class="total-price" id="total-price"></p>
+      </div>
+    </div>
+
     <button class="button">
       <i class="fas fa-user"></i>
     </button>
   </div>
 
-<header>
-  <h1><a href="index.html" class="logo">SORIX.LT</a></h1>
-</header>
-
+  <header>
+    <h1><a href="index.html" class="logo">SORIX.LT</a></h1>
+  </header>
 
   <main class="product-container">
     <div class="product-card">
       <img src="https://th.bing.com/th/id/R.6746beb1a1ca5c49d49460bca82f1970?rik=uU8X4WXzty9tCQ&pid=ImgRaw&r=0">
       <h2>Ryzen 5 5600x</h2>
       <p><strong>€129.69</strong></p>
-      <button class="buy-button">Peržiūrėti</button>
+      <button class="buy-button">Pirkti</button>
     </div>
 
     <div class="product-card">
       <img src="https://th.bing.com/th/id/R.435a6ccaf18f89fd424662eefe044024?rik=EZNCA9ydhwR3Xg&pid=ImgRaw&r=0">
       <h2>Corsair DDR4 2x8GB RAM 3200Mhz</h2>
       <p><strong>€29.99</strong></p>
-      <button class="buy-button">Peržiūrėti</button>
+      <button class="buy-button">Pirkti</button>
     </div>
 
     <div class="product-card">
       <img src="https://www.gigabyte.com/FileUpload/mx/news/1450/01.png">
       <h2>GTX 1060 3GB</h2>
       <p><strong>€49.99</strong></p>
-      <button class="buy-button">Peržiūrėti</button>
-    </div><div class="top-right-buttons">
-  <button class="top-button">1</button>
-  <button class="top-button">2</button>
-</div>
+      <button class="buy-button">Pirkti</button>
+    </div>
   </main>
+
+  <script>
+    const cartButton = document.getElementById('cart-button');
+    const cartDropdown = document.getElementById('cart-dropdown');
+    const cartItemsList = document.getElementById('cart-items');
+    const emptyMsg = document.getElementById('empty-msg');
+    const buyButtons = document.querySelectorAll('.buy-button');
+    const totalPriceEl = document.getElementById('total-price');
+    const overlay = document.getElementById('overlay');
+
+    const cart = {};
+
+    cartButton.addEventListener('click', () => {
+      cartDropdown.classList.toggle('active');
+      overlay.classList.toggle('active');
+    });
+
+    overlay.addEventListener('click', () => {
+      cartDropdown.classList.remove('active');
+      overlay.classList.remove('active');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (
+        !cartButton.contains(e.target) &&
+        !cartDropdown.contains(e.target) &&
+        !e.target.closest('.cart-dropdown')
+      ) {
+        cartDropdown.classList.remove('active');
+        overlay.classList.remove('active');
+      }
+    });
+
+    function renderCart() {
+      cartItemsList.innerHTML = '';
+
+      const keys = Object.keys(cart);
+      let total = 0;
+
+      if (keys.length === 0) {
+        emptyMsg.style.display = 'block';
+        totalPriceEl.textContent = '';
+        return;
+      } else {
+        emptyMsg.style.display = 'none';
+      }
+
+      keys.forEach((title) => {
+        const item = cart[title];
+        const itemPrice = parseFloat(item.price.replace('€', '').replace(',', '.'));
+        const itemTotal = (itemPrice * item.quantity).toFixed(2);
+        total += itemPrice * item.quantity;
+
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <span>${item.quantity}× ${title} – €${itemTotal}</span>
+          <button data-title="${title}">−</button>
+        `;
+        cartItemsList.appendChild(li);
+      });
+
+      totalPriceEl.textContent = `Bendra suma: €${total.toFixed(2)}`;
+
+      document.querySelectorAll('[data-title]').forEach((btn) => {
+        btn.addEventListener('click', (event) => {
+          event.stopPropagation();
+          const title = btn.getAttribute('data-title');
+          if (cart[title].quantity > 1) {
+            cart[title].quantity--;
+          } else {
+            delete cart[title];
+          }
+          renderCart();
+          cartDropdown.classList.add('active');
+          overlay.classList.add('active');
+        });
+      });
+    }
+
+    buyButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const productCard = button.closest('.product-card');
+        const title = productCard.querySelector('h2').textContent;
+        const price = productCard.querySelector('p strong').textContent;
+
+        if (cart[title]) {
+          cart[title].quantity++;
+        } else {
+          cart[title] = { price: price, quantity: 1 };
+        }
+
+        renderCart();
+        cartDropdown.classList.add('active');
+        overlay.classList.add('active');
+      });
+    });
+  </script>
 </body>
 </html>
