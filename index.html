@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>SORIX.LT</title>
-  <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     body {
@@ -34,11 +33,7 @@
     }
 
     .button:hover {
-      background-color: #228b22b6;
-    }
-
-    .button i {
-      font-size: 16px;
+      background-color: #1a7f1a;
     }
 
     .product-image {
@@ -62,7 +57,7 @@
     }
 
     .buy-button:hover {
-      background-color: #228b22b6;
+      background-color: #1a7f1a;
       transform: scale(1.05);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
@@ -72,10 +67,11 @@
       top: 0;
       right: 0;
       height: 100vh;
-      width: 25vw;
-      background-color: white;
+      width: 340px;
+      background-color: #fff;
+      color: #000;
       border-left: 1px solid #ddd;
-      padding: 20px;
+      padding: 24px;
       box-shadow: -4px 0 20px rgba(0, 0, 0, 0.2);
       transform: translateX(100%);
       transition: transform 0.4s ease;
@@ -83,40 +79,11 @@
       overflow-y: auto;
       border-top-left-radius: 12px;
       border-bottom-left-radius: 12px;
+      font-size: 14px;
     }
 
     .cart-dropdown.active {
       transform: translateX(0%);
-    }
-
-    .cart-dropdown ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .cart-dropdown li {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-      font-size: 14px;
-    }
-
-    .cart-dropdown li button {
-      background-color: red;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      padding: 2px 6px;
-    }
-
-    .total-price {
-      margin-top: 10px;
-      font-weight: bold;
-      font-size: 16px;
-      text-align: center;
     }
 
     .overlay {
@@ -155,6 +122,78 @@
       padding: 20px;
       display: inline-block;
     }
+
+    .cart-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+      gap: 10px;
+    }
+
+    .cart-item img {
+      width: 40px;
+      height: 40px;
+      border-radius: 6px;
+    }
+
+    .cart-summary {
+      margin-top: 20px;
+    }
+
+    .cart-summary div {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .cart-summary .total {
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .cart-dropdown input[type="text"] {
+      flex: 1;
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      background-color: #f9f9f9;
+      color: black;
+    }
+
+    .cart-dropdown .coupon-container {
+      display: flex;
+      gap: 8px;
+      margin: 16px 0;
+    }
+
+    .cart-dropdown .pay-btn {
+      width: 100%;
+      padding: 12px;
+      background-color: #228b22;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .cart-dropdown .pay-btn:hover {
+      background-color: #1a7f1a;
+    }
+
+    .qty-btn {
+      background-color: #ccc;
+      border: none;
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-weight: bold;
+      margin-left: 4px;
+      cursor: pointer;
+    }
+
+    .qty-btn:hover {
+      background-color: #bbb;
+    }
   </style>
 </head>
 <body>
@@ -165,10 +204,23 @@
       <button class="button" id="cart-button">
         <i class="fas fa-shopping-cart"></i>
       </button>
+
       <div class="cart-dropdown" id="cart-dropdown">
-        <p id="empty-msg">Krepšelis tuščias</p>
-        <ul id="cart-items"></ul>
-        <p class="total-price" id="total-price"></p>
+<h2 class="cart-title">Užsakymo krepšelis</h2>
+        <div id="cart-items-container"></div>
+
+        <div class="coupon-container">
+          <input type="text" placeholder="Įveskite kupono kodą" id="coupon-input" />
+          <button id="apply-coupon">→</button>
+        </div>
+
+        <div class="cart-summary">
+          <div><span>Tarpinė suma</span><span id="subtotal-price">€0.00</span></div>
+          <div><span>Mokėjimo mokestis</span><span id="fee-price">€0.00</span></div>
+          <div class="total"><span>Viso</span><span id="total-price">€0.00</span></div>
+        </div>
+
+        <button class="pay-btn">→ Tęsti apmokėjimą</button>
       </div>
     </div>
 
@@ -183,122 +235,147 @@
 
   <main class="product-container">
     <div class="product-card">
-      <img src="https://th.bing.com/th/id/R.6746beb1a1ca5c49d49460bca82f1970?rik=uU8X4WXzty9tCQ&pid=ImgRaw&r=0">
+      <img src="https://th.bing.com/th/id/R.6746beb1a1ca5c49d49460bca82f1970?rik=uU8X4WXzty9tCQ&pid=ImgRaw&r=0" class="product-image">
       <h2>Ryzen 5 5600x</h2>
       <p><strong>€129.69</strong></p>
       <button class="buy-button">Pirkti</button>
     </div>
 
     <div class="product-card">
-      <img src="https://th.bing.com/th/id/R.435a6ccaf18f89fd424662eefe044024?rik=EZNCA9ydhwR3Xg&pid=ImgRaw&r=0">
+      <img src="https://th.bing.com/th/id/R.435a6ccaf18f89fd424662eefe044024?rik=EZNCA9ydhwR3Xg&pid=ImgRaw&r=0" class="product-image">
       <h2>Corsair DDR4 2x8GB RAM 3200Mhz</h2>
       <p><strong>€29.99</strong></p>
       <button class="buy-button">Pirkti</button>
     </div>
 
     <div class="product-card">
-      <img src="https://www.gigabyte.com/FileUpload/mx/news/1450/01.png">
+      <img src="https://www.gigabyte.com/FileUpload/mx/news/1450/01.png" class="product-image">
       <h2>GTX 1060 3GB</h2>
       <p><strong>€49.99</strong></p>
       <button class="buy-button">Pirkti</button>
     </div>
   </main>
 
-  <script>
-    const cartButton = document.getElementById('cart-button');
-    const cartDropdown = document.getElementById('cart-dropdown');
-    const cartItemsList = document.getElementById('cart-items');
-    const emptyMsg = document.getElementById('empty-msg');
-    const buyButtons = document.querySelectorAll('.buy-button');
-    const totalPriceEl = document.getElementById('total-price');
-    const overlay = document.getElementById('overlay');
+<script>
+  const cartButton = document.getElementById('cart-button');
+  const cartDropdown = document.getElementById('cart-dropdown');
+  const cartItemsContainer = document.getElementById('cart-items-container');
+  const subtotalEl = document.getElementById('subtotal-price');
+  const feeEl = document.getElementById('fee-price');
+  const totalEl = document.getElementById('total-price');
+  const overlay = document.getElementById('overlay');
+  const buyButtons = document.querySelectorAll('.buy-button');
+  const couponInput = document.getElementById('coupon-input');
+  const applyCouponBtn = document.getElementById('apply-coupon');
 
-    const cart = {};
+  const cart = {};
+  let couponDiscount = 0;
+  const feePercentage = 0.02;
+  const currency = new Intl.NumberFormat('lt-LT', { style: 'currency', currency: 'EUR' });
 
-    cartButton.addEventListener('click', () => {
-      cartDropdown.classList.toggle('active');
-      overlay.classList.toggle('active');
-    });
+  cartButton.addEventListener('click', toggleCart);
+  overlay.addEventListener('click', closeCart);
+  applyCouponBtn.addEventListener('click', applyCoupon);
 
-    overlay.addEventListener('click', () => {
-      cartDropdown.classList.remove('active');
-      overlay.classList.remove('active');
-    });
+  buyButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const card = button.closest('.product-card');
+      const title = card.querySelector('h2').textContent;
+      const price = parseFloat(card.querySelector('p strong').textContent.replace('€', '').replace(',', '.'));
+      const image = card.querySelector('img').src;
 
-    document.addEventListener('click', (e) => {
-      if (
-        !cartButton.contains(e.target) &&
-        !cartDropdown.contains(e.target) &&
-        !e.target.closest('.cart-dropdown')
-      ) {
-        cartDropdown.classList.remove('active');
-        overlay.classList.remove('active');
-      }
-    });
-
-    function renderCart() {
-      cartItemsList.innerHTML = '';
-
-      const keys = Object.keys(cart);
-      let total = 0;
-
-      if (keys.length === 0) {
-        emptyMsg.style.display = 'block';
-        totalPriceEl.textContent = '';
-        return;
+      if (cart[title]) {
+        cart[title].quantity++;
       } else {
-        emptyMsg.style.display = 'none';
+        cart[title] = { price, quantity: 1, image };
       }
 
-      keys.forEach((title) => {
-        const item = cart[title];
-        const itemPrice = parseFloat(item.price.replace('€', '').replace(',', '.'));
-        const itemTotal = (itemPrice * item.quantity).toFixed(2);
-        total += itemPrice * item.quantity;
+      renderCart();
+      // openCart(); // Nebeatidaro krepšelio automatiškai
+    });
+  });
 
-        const li = document.createElement('li');
-        li.innerHTML = `
-          <span>${item.quantity}× ${title} – €${itemTotal}</span>
-          <button data-title="${title}">−</button>
-        `;
-        cartItemsList.appendChild(li);
-      });
+  function applyCoupon() {
+    const code = couponInput.value.trim().toUpperCase();
+    if (code === 'TEST') {
+      couponDiscount = 0.10;
+      alert('Jums pritaikyta 10% nuolaida!');
+    } else {
+      couponDiscount = 0;
+      alert('Neteisingas kupono kodas.');
+    }
+    renderCart();
+  }
 
-      totalPriceEl.textContent = `Bendra suma: €${total.toFixed(2)}`;
+  function toggleCart() {
+    cartDropdown.classList.toggle('active');
+    overlay.classList.toggle('active');
+  }
 
-      document.querySelectorAll('[data-title]').forEach((btn) => {
-        btn.addEventListener('click', (event) => {
-          event.stopPropagation();
-          const title = btn.getAttribute('data-title');
-          if (cart[title].quantity > 1) {
-            cart[title].quantity--;
-          } else {
-            delete cart[title];
-          }
-          renderCart();
-          cartDropdown.classList.add('active');
-          overlay.classList.add('active');
-        });
-      });
+  function openCart() {
+    cartDropdown.classList.add('active');
+    overlay.classList.add('active');
+  }
+
+  function closeCart() {
+    cartDropdown.classList.remove('active');
+    overlay.classList.remove('active');
+  }
+
+  function renderCart() {
+    cartItemsContainer.innerHTML = '';
+    let subtotal = 0;
+
+    const titles = Object.keys(cart);
+    if (titles.length === 0) {
+      cartItemsContainer.innerHTML = '<p>Krepšelis tuščias</p>';
+      subtotalEl.textContent = currency.format(0);
+      feeEl.textContent = currency.format(0);
+      totalEl.textContent = currency.format(0);
+      return;
     }
 
-    buyButtons.forEach((button) => {
-      button.addEventListener('click', () => {
-        const productCard = button.closest('.product-card');
-        const title = productCard.querySelector('h2').textContent;
-        const price = productCard.querySelector('p strong').textContent;
+    titles.forEach(title => {
+      const { price, quantity, image } = cart[title];
+      const totalItem = price * quantity;
+      subtotal += totalItem;
 
-        if (cart[title]) {
-          cart[title].quantity++;
+      const itemEl = document.createElement('div');
+      itemEl.className = 'cart-item';
+      itemEl.innerHTML = `
+        <img src="${image}" />
+        <div style="flex:1;">
+          <strong>${title}</strong><br>
+          <small>${quantity} × ${currency.format(price)} = ${currency.format(totalItem)}</small>
+        </div>
+        <div>
+          <button class="qty-btn" data-action="minus" data-title="${title}">−</button>
+          <button class="qty-btn" data-action="plus" data-title="${title}">+</button>
+        </div>
+      `;
+      cartItemsContainer.appendChild(itemEl);
+    });
+
+    const discountAmount = subtotal * couponDiscount;
+    const fee = (subtotal - discountAmount) * feePercentage;
+    const total = subtotal - discountAmount + fee;
+
+    subtotalEl.textContent = currency.format(subtotal);
+    feeEl.textContent = currency.format(fee);
+    totalEl.textContent = currency.format(total);
+
+    document.querySelectorAll('.qty-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const title = btn.dataset.title;
+        const action = btn.dataset.action;
+        if (action === 'minus') {
+          cart[title].quantity--;
+          if (cart[title].quantity <= 0) delete cart[title];
         } else {
-          cart[title] = { price: price, quantity: 1 };
+          cart[title].quantity++;
         }
-
         renderCart();
-        cartDropdown.classList.add('active');
-        overlay.classList.add('active');
       });
     });
-  </script>
-</body>
-</html>
+  }
+</script>
