@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SORIX.LT</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    body {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      margin: 0;
+    }
+    body::-webkit-scrollbar {
+      display: none;
+    }
+    html, body {
+      overflow-x: hidden;
+      height: 100%;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #121212;
+      color: #e0e0e0;
+    }
+
+    header {
+      background-color: #1a1a1a;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background-color: transparent;
+      transition: background-color 0.3s ease;
+    }
+
+    header:hover {
+      background-color: #1a1a1a;
+    }
+
+    .header-hidden {
+      transform: translateY(-100%);
+      transition: transform 0.3s ease;
+    }
+
+    .header-visible {
+      transform: translateY(0);
+      transition: transform 0.3s ease;
+    }
+
+    .logo {
+      color: #ff002b;
+      font-weight: bold;
+      font-size: 40px;
+      text-decoration: none;
+    }
+
+    .cart-button {
+      background-color: #33333300;
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.3s ease;
+      color: #ffffff;
+    }
+
+    .cart-button:hover {
+      background-color: #33333300;
+      transform: scale(1.05);
+    }
+
+    .cart-count {
+      position: absolute;
+      top: -4px;
+      right: -7px;
+      color: #ffffff;
+      border-radius: 50%;
+      width: 30px;
+      height: 22px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: bold;
+    }
+
+    .cart-count.active {
+      display: flex;
+    }
+
+    .cart-pulse.animate {
+      animation: pulse 0.6s ease-out;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(0.5);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(2);
+        opacity: 0;
+      }
+    }
+
+    main {
+      flex: 1;
+      padding: 100px 20px 80px;
+      margin-top: 60px;
+      min-height: calc(100vh - 160px);
+    }
+
+    .product-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, max-content));
+      gap: 20px;
+
+      max-width: 1200px;
+      margin: 0 auto;
+      justify-content: center;
+    }
+
+    .product-card {
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      padding: 0px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.3s ease;
+      color: #e0e0e0;
+      border: 1px solid #ff002b;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .product-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        to bottom right,
+        rgba(255, 0, 43, 0.1) 0%,
+        rgba(255, 0, 43, 0) 60%
+      );
+      transform: rotate(30deg);
+      pointer-events: none;
+    }
+
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(255, 0, 43, 0.3);
+    }
+
+    .product-image {
+      width: 238px;
+      height: 220px;
+      border-radius: 0px;
+      border: none;
+      margin-bottom: 15px;
+    }
+
+    .product-card h2 {
+      margin: 0 0 10px 0;
+      font-size: 16px;
+      text-align: center;
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    .product-price {
+      font-weight: bold;
+      font-size: 16px;
+      color: #ffffff;
+      margin: 10px 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .buy-button {
+      position: relative;
+      font-weight: bold;
+      text-transform: uppercase;
+      background-color: #ff002b5d;
+      color: white;
+      border: none;
+      padding: 14px;
+      width: 100%;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .buy-button .text {
+      transition: opacity 0.3s ease;
+      display: inline-block;
+    }
+
+    .buy-button .icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      font-size: 18px;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    .buy-button:hover .text {
+      opacity: 0;
+    }
+
+    .buy-button:hover .icon {
+      opacity: 1;
+    }
+
+    .cart-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .cart-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .cart-sidebar {
+      position: fixed;
+      top: 0;
+      right: -400px;
+      width: 380px;
+      height: 100%;
+      background: #1e1e1e;
+      box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
+      transition: right 0.3s ease;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .cart-sidebar.active {
+      right: 0;
+    }
+
+    .cart-header {
+      padding: 20px;
+      border-bottom: 1px solid #333;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cart-title {
+      font-size: 20px;
+      font-weight: bold;
+      margin: 0;
+      color: #ffffff;
+    }
+
+    .close-cart {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: #aaa;
+    }
+
+    .cart-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0;
+      scrollbar-width: thin;
+      scrollbar-color: #ff002b #2a2a2a;
+    }
+
+    .cart-body::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .cart-body::-webkit-scrollbar-track {
+      background: #2a2a2a;
+    }
+
+    .cart-body::-webkit-scrollbar-thumb {
+      background-color: #ff002b;
+      border-radius: 6px;
+    }
+
+    .empty-cart {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .empty-cart-icon {
+      font-size: 60px;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .empty-cart-message {
+      font-size: 18px;
+      color: #aaa;
+      margin-bottom: 25px;
+    }
+
+    .continue-shopping {
+      background-color: #ff002b;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 25px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .continue-shopping:hover {
+      background-color: #ff002b;
+      transform: translateY(-2px);
+    }
+
+    .cart-items {
+      margin-bottom: 20px;
+    }
+
+    .cart-item {
+      display: flex;
+      padding: 20px;
+      border-bottom: 1px solid #2a2a2a;
+      transition: all 0.3s ease;
+      background: rgba(30, 30, 30, 0.7);
+      position: relative;
+      overflow: hidden;
+      animation: slideIn 0.3s ease forwards;
+    }
+
+    .cart-item-image {
+      width: 70px;
+      height: 70px;
+      object-fit: contain;
+      border-radius: 6px;
+      margin-right: 15px;
+    }
+
+    .cart-item-details {
+      flex: 1;
+    }
+
+    .cart-item-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+      font-size: 15px;
+      color: #ffffff;
+    }
+
+    .cart-item-price {
+      color: #ffffff;
+      font-weight: bold;
+      font-size: 12px;
+    }
+
+    .cart-item-actions {
+      display: flex;
+      align-items: center;
+      margin-top: 8px;
+    }
+
+    .quantity-btn {
+      background: #ff002b;
+      color: white;
+      border: none;
+      width: 25px;
+      height: 25px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 
+        0 2px 5px rgba(0, 0, 0, 0.2),
+        -5px 0 15px rgba(0, 0, 0, 0.1);
+      transition: 
+        all 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.15s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .quantity {
+      margin: 0 10px;
+      font-weight: bold;
+      user-select: none;
+      color: #e0e0e0;
+    }
+
+    .quantity-btn:hover {
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 
+        0 4px 8px rgba(0, 0, 0, 0.2),
+        -5px 0 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .quantity-btn:active {
+      transform: translateY(0) scale(0.95);
+      background-color: #cc0022;
+      box-shadow: 
+        0 1px 2px rgba(0, 0, 0, 0.2),
+        -5px 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .quantity-btn::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      background: radial-gradient(circle, rgba(255,255,255,0.3) 1%, transparent 1%) center/15000%;
+      opacity: 0;
+      transition: opacity 0.5s, background-size 0.5s;
+    }
+
+    .quantity-btn:active::after {
+      background-size: 100%;
+      opacity: 1;
+      transition: background-size 0s;
+    }
+
+    .quantity-btn {
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .remove-item {
+      background: none;
+      border: none;
+      color: #ff4757;
+      cursor: pointer;
+      font-size: 14px;
+      margin-left: auto;
+      padding: 5px 10px;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .remove-item:hover {
+      background: rgba(255, 71, 87, 0.1);
+    }
+
+    .cart-footer {
+      padding: 20px;
+      border-top: 1px solid #333;
+      background: #1a1a1a;
+    }
+
+    .cart-summary {
+      margin-bottom: 20px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      color: #e0e0e0;
+    }
+
+    .total-row {
+      font-weight: bold;
+      font-size: 18px;
+      border-top: 1px solid #333;
+      padding-top: 10px;
+      color: #ffffff;
+    }
+
+    .checkout-btn {
+      background: linear-gradient(135deg, #ff002b 0%, #d60024 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 16px;
+      width: 100%;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+      box-shadow: 0 4px 15px rgba(255, 0, 43, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .checkout-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 0, 43, 0.4);
+    }
+
+    .checkout-btn:active {
+      transform: translateY(0);
+    }
+
+    footer {
+      background-color: #1a1a1a;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      margin-top: auto;
+    }
+
+    .footer-text {
+      font-size: 12px;
+      color: #aaa;
+    }
+
+    #particles-js {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 50%, #0f0f0f 100%);
+      opacity: 1;
+    }
+
+    .particles-js-canvas-el {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .added-to-cart-message {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background-color: #363636;
+      color: white;
+      padding: 12px 25px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 1001;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    .added-to-cart-message.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+    .added-to-cart-message i {
+      font-size: 18px;
+    }
+
+    .promo-code-section {
+      display: none;
+      padding: 15px 20px;
+      border-bottom: 1px solid #333;
+      background-color: #1a1a1a;
+    }
+
+    .promo-code-title {
+      font-size: 16px;
+      margin-bottom: 10px;
+      color: #e0e0e0;
+      font-weight: 600;
+    }
+
+    .promo-code-input-container {
+      display: flex;
+      gap: 8px;
+    }
+
+    .promo-code-input {
+      flex: 1;
+      padding: 10px 12px;
+      border: 1px solid #333;
+      border-radius: 6px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.3s;
+      background-color: #2d2d2d;
+      color: #e0e0e0;
+    }
+
+    .promo-code-input:focus {
+      border-color: #d60024;
+    }
+
+    .apply-promo-btn {
+      background: linear-gradient(135deg, #ff002b 0%, #d60024 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 0 18px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 10px rgba(255, 0, 43, 0.2);
+    }
+
+    .apply-promo-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(255, 0, 43, 0.3);
+    }
+
+    .promo-code-message {
+      margin-top: 8px;
+      font-size: 13px;
+      display: none;
+    }
+
+    .promo-code-success {
+      color: #8db600;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .promo-code-error {
+      color: #ff4757;
+    }
+
+    .promo-code-applied {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 12px;
+      font-size: 14px;
+      color: white;
+      background: rgba(255, 0, 43, 0.1);
+      border: 1px solid rgba(255, 0, 43, 0.2);
+    }
+
+    .remove-promo {
+      color: #ff4757;
+      cursor: pointer;
+      font-size: 12px;
+      background: none;
+      border: none;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s ease;
+    }
+
+    .remove-promo:hover {
+      color: #ff002b;
+    }
+
+    .cart-notification {
+      position: absolute;
+      top: 0%;
+      right: 4%;
+      border-radius: 50%;
+      background-color: #ff4d6a;
+      height: 12px;
+      width: 12px;
+      animation: pulse 1.5s infinite;
+      display: none;
+    }
+
+    .cart-notification.active {
+      display: block;
+    }
+
+    .logo img {
+      height: 80px;
+      width: auto;
+      display: block;
+      position: absolute;
+      top: 2px;
+    }
+
+    .logo:hover img {
+      opacity: 0.9;
+      transition: opacity 0.2s;
+    }
+  </style>
+</head>
+<body>
+  <div id="particles-js"></div>
+
+  <header>
+    <a href="#" class="logo">
+      <img 
+        src="https://github.com/AdasImone/sorix.github.io/blob/main/SORIX.png?raw=true" 
+        alt="SORIX Logo" 
+        width="120" 
+        height="80"
+      >
+    </a>
+    
+    <button class="cart-button" id="cart-button">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+      </svg>
+      <span class="cart-count" id="cart-count">0</span>
+      <span class="cart-notification" id="cart-notification"></span>
+    </button>
+  </header>
+
+  <main>
+    <div class="product-container">
+      <div class="product-card">
+        <img src="https://bing.com/th/id/BCO.4844b365-fc64-4512-a624-8c935c432ca5.png" class="product-image" />
+        <h2>GTX 1060 3GB</h2>
+        <p class="product-price">€129.69</p>
+        <button class="buy-button">
+          <span class="text">Į Krepšelį</span>
+          <span class="icon"><i class="fa-solid fa-basket-shopping"></i></span>
+        </button>
+      </div>
+
+      <div class="product-card">
+        <img src="https://bing.com/th/id/BCO.4844b365-fc64-4512-a624-8c935c432ca5.png" class="product-image" />
+        <h2>GTX 1060 3GB</h2>
+        <p class="product-price">€29.99</p>
+        <button class="buy-button">
+          <span class="text">Į Krepšelį</span>
+          <span class="icon"><i class="fa-solid fa-basket-shopping"></i></span>
+        </button>
+      </div>
+
+      <div class="product-card">
+        <img src="https://bing.com/th/id/BCO.4844b365-fc64-4512-a624-8c935c432ca5.png" class="product-image" />
+        <h2>GTX 1060 3GB</h2>
+        <p class="product-price">€49.99</p>
+        <button class="buy-button">
+          <span class="text">Į Krepšelį</span>
+          <span class="icon"><i class="fa-solid fa-basket-shopping"></i></span>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p class="footer-text">SORIX.LT &copy; 2025 | Mes nesame susiję su jokiais kitais prekės ženklais, prekės ženklus turinčiomis bendrovėmis ir jų valdomomis organizacijomis.</p>
+  </footer>
+
+  <div class="cart-overlay" id="cart-overlay"></div>
+  <div class="cart-sidebar" id="cart-sidebar">
+    <div class="cart-header">
+      <h3 class="cart-title"><i class=""></i> Jūsų krepšelis</h3>
+      <button class="close-cart" id="close-cart">&times;</button>
+    </div>
+    <div class="cart-body" id="cart-body">
+    </div>
+
+    <div class="promo-code-section" id="promo-code-section">
+      <div class="promo-code-title"><i class="fas fa-tag"></i> Nuolaidos kodas</div>
+      <div class="promo-code-input-container">
+        <input type="text" class="promo-code-input" id="promo-code-input" placeholder="Įveskite kodą">
+        <button class="apply-promo-btn" id="apply-promo-btn">Taikyti</button>
+      </div>
+      <div class="promo-code-message" id="promo-code-message"></div>
+      <div class="promo-code-applied" id="promo-code-applied" style="display: none;">
+        <span>Panaudotas kodas: <strong id="applied-code-text"></strong></span>
+        <button class="remove-promo" id="remove-promo"><i class="fas fa-times"></i> Pašalinti</button>
+      </div>
+    </div>
+    <div class="cart-footer" id="cart-footer">
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+  <script>
+    const cart = {};
+    let couponDiscount = 0;
+    const feePercentage = 0.02;
+    const currency = new Intl.NumberFormat('lt-LT', { style: 'currency', currency: 'EUR' });
+
+    const cartButton = document.getElementById('cart-button');
+    const cartOverlay = document.getElementById('cart-overlay');
+    const cartSidebar = document.getElementById('cart-sidebar');
+    const closeCartBtn = document.getElementById('close-cart');
+    const cartBody = document.getElementById('cart-body');
+    const cartFooter = document.getElementById('cart-footer');
+    const cartCount = document.getElementById('cart-count');
+    const cartNotification = document.getElementById('cart-notification');
+    const buyButtons = document.querySelectorAll('.buy-button');
+    
+    const promoCodeInput = document.getElementById('promo-code-input');
+    const applyPromoBtn = document.getElementById('apply-promo-btn');
+    const promoCodeMessage = document.getElementById('promo-code-message');
+    const promoCodeApplied = document.getElementById('promo-code-applied');
+    const appliedCodeText = document.getElementById('applied-code-text');
+    const removePromoBtn = document.getElementById('remove-promo');
+    const promoCodeSection = document.getElementById('promo-code-section');
+    
+    const validPromoCodes = {
+      'SORIX10': 0.1,
+      'SORIX20': 0.2,
+      'SORIX50': 0.5
+    };
+
+    function toggleCart() {
+      cartOverlay.classList.toggle('active');
+      cartSidebar.classList.toggle('active');
+    }
+
+    function closeCart() {
+      cartOverlay.classList.remove('active');
+      cartSidebar.classList.remove('active');
+    }
+
+    function addToCart(productCard) {
+      const title = productCard.querySelector('h2').textContent;
+      const price = parseFloat(productCard.querySelector('.product-price').textContent.replace('€', '').replace(',', '.'));
+      const image = productCard.querySelector('.product-image').src;
+
+      if (cart[title]) {
+        cart[title].quantity++;
+      } else {
+        cart[title] = { price, quantity: 1, image };
+      }
+
+      const pulse = document.createElement('div');
+      pulse.className = 'cart-pulse animate';
+      cartButton.appendChild(pulse);
+      
+      setTimeout(() => {
+        pulse.remove();
+      }, 600);
+
+      renderCart();
+      showAddedToCartMessage(title);
+    }
+
+    function showAddedToCartMessage(productName) {
+      const message = document.createElement('div');
+      message.className = 'added-to-cart-message';
+      message.innerHTML = `
+        <i class="fas fa-check-circle"></i> 
+        ${productName} pridėta į krepšelį
+      `;
+      document.body.appendChild(message);
+      
+      setTimeout(() => {
+        message.classList.add('show');
+      }, 10);
+      
+      setTimeout(() => {
+        message.classList.remove('show');
+        setTimeout(() => {
+          document.body.removeChild(message);
+        }, 300);
+      }, 3000);
+    }
+
+    function renderCart() {
+      const itemCount = Object.keys(cart).reduce((total, key) => total + cart[key].quantity, 0);
+      
+      cartCount.textContent = itemCount;
+      if (itemCount > 0) {
+        cartCount.classList.add('active');
+        cartNotification.classList.add('active');
+        promoCodeSection.style.display = 'block';
+      } else {
+        cartCount.classList.remove('active');
+        cartNotification.classList.remove('active');
+        promoCodeSection.style.display = 'none';
+        couponDiscount = 0;
+        promoCodeApplied.style.display = 'none';
+      }
+
+      if (itemCount === 0) {
+        cartBody.innerHTML = `
+          <div class="empty-cart">
+            <div class="empty-cart-icon">
+              <i class="fas fa-shopping-basket"></i>
+            </div>
+            <p class="empty-cart-message">Jūsų krepšelis tuščias</p>
+            <button class="continue-shopping" onclick="closeCart()">Tęsti apsipirkimą</button>
+          </div>
+        `;
+        cartFooter.innerHTML = '';
+        return;
+      }
+
+      let subtotal = 0;
+      let itemsHTML = '';
+
+      Object.keys(cart).forEach(title => {
+        const { price, quantity, image } = cart[title];
+        const totalItem = price * quantity;
+        subtotal += totalItem;
+
+        itemsHTML += `
+          <div class="cart-item">
+            <img src="${image}" class="cart-item-image" alt="${title}">
+            <div class="cart-item-details">
+              <div class="cart-item-title">${title}</div>
+              <div class="cart-item-price">${currency.format(price)}</div>
+              <div class="cart-item-actions">
+                <button class="quantity-btn minus" data-title="${title}">-</button>
+                <span class="quantity">${quantity}</span>
+                <button class="quantity-btn plus" data-title="${title}">+</button>
+                <button class="remove-item" data-title="${title}">
+                        <img src="https://img.icons8.com/?size=20&id=bd7IoT6bIayo&format=png&color=FF0000" alt="Icon" />
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      const discountAmount = subtotal * couponDiscount;
+      const fee = (subtotal - discountAmount) * feePercentage;
+      const total = subtotal - discountAmount + fee;
+
+      cartBody.innerHTML = `
+        <div class="cart-items">${itemsHTML}</div>
+      `;
+
+      let discountRow = '';
+      if (discountAmount > 0) {
+        discountRow = `
+          <div class="summary-row">
+            <span>Nuolaida:</span>
+            <span>-${currency.format(discountAmount)}</span>
+          </div>
+        `;
+      }
+
+      cartFooter.innerHTML = `
+        <div class="cart-summary">
+          <div class="summary-row">
+            <span>Tarpinė suma:</span>
+            <span>${currency.format(subtotal)}</span>
+          </div>
+          ${discountRow}
+          <div class="summary-row">
+            <span>Mokėjimo mokestis:</span>
+            <span>${currency.format(fee)}</span>
+          </div>
+          <div class="summary-row total-row">
+            <span>Viso:</span>
+            <span>${currency.format(total)}</span>
+          </div>
+        </div>
+        <button class="checkout-btn"><i class="fas fa-credit-card"></i> Tęsti į apmokėjimą</button>
+      `;
+
+      document.querySelectorAll('.quantity-btn.minus').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const title = btn.dataset.title;
+          cart[title].quantity--;
+          if (cart[title].quantity <= 0) {
+            delete cart[title];
+          }
+          renderCart();
+        });
+      });
+
+      document.querySelectorAll('.quantity-btn.plus').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const title = btn.dataset.title;
+          cart[title].quantity++;
+          renderCart();
+        });
+      });
+
+      document.querySelectorAll('.remove-item').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const title = btn.dataset.title;
+          delete cart[title];
+          renderCart();
+        });
+      });
+    }
+    
+    function applyPromoCode() {
+      const code = promoCodeInput.value.trim().toUpperCase();
+      promoCodeMessage.style.display = 'none';
+      
+      if (!code) {
+        showPromoMessage('Įveskite nuolaidos kodą', 'error');
+        return;
+      }
+      
+      if (validPromoCodes[code]) {
+        couponDiscount = validPromoCodes[code];
+        appliedCodeText.textContent = code;
+        promoCodeApplied.style.display = 'flex';
+        promoCodeInput.value = '';
+        showPromoMessage(`Nuolaidos kodas sėkmingai pritaikytas! Nuolaida: ${couponDiscount * 100}%`, 'success');
+        renderCart();
+      } else {
+        showPromoMessage('Netinkamas nuolaidos kodas', 'error');
+      }
+    }
+    
+    function showPromoMessage(message, type) {
+      promoCodeMessage.textContent = message;
+      promoCodeMessage.className = 'promo-code-message promo-code-' + type;
+      promoCodeMessage.style.display = 'block';
+      
+      setTimeout(() => {
+        promoCodeMessage.style.display = 'none';
+      }, 5000);
+    }
+    
+    function removePromoCode() {
+      couponDiscount = 0;
+      promoCodeApplied.style.display = 'none';
+      renderCart();
+    }
+
+    cartButton.addEventListener('click', toggleCart);
+    cartOverlay.addEventListener('click', closeCart);
+    closeCartBtn.addEventListener('click', closeCart);
+
+    buyButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        addToCart(button.closest('.product-card'));
+      });
+    });
+    
+    applyPromoBtn.addEventListener('click', applyPromoCode);
+    removePromoBtn.addEventListener('click', removePromoCode);
+    
+    promoCodeInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        applyPromoCode();
+      }
+    });
+
+    renderCart();
+
+    particlesJS("particles-js", {
+      particles: {
+        number: {
+          value: 80,
+          density: {
+            enable: true,
+            value_area: 800
+          }
+        },
+        color: {
+          value: "#ff002b"
+        },
+        shape: {
+          type: "circle",
+          stroke: {
+            width: 0,
+            color: "#000000"
+          }
+        },
+        opacity: {
+          value: 0.5,
+          random: true,
+          anim: {
+            enable: false,
+            speed: 1,
+            opacity_min: 0.1,
+            sync: false
+          }
+        },
+        size: {
+          value: 3,
+          random: true,
+          anim: {
+            enable: false,
+            speed: 40,
+            size_min: 0.1,
+            sync: false
+          }
+        },
+        line_linked: {
+          enable: true,
+          distance: 150,
+          color: "#ff002b",
+          opacity: 0.2,
+          width: 1
+        },
+        move: {
+          enable: true,
+          speed: 1,
+          direction: "none",
+          random: true,
+          straight: false,
+          out_mode: "out",
+          bounce: false,
+          attract: {
+            enable: false,
+            rotateX: 600,
+            rotateY: 1200
+          }
+        }
+      },
+      interactivity: {
+        detect_on: "canvas",
+        events: {
+          onhover: {
+            enable: true,
+            mode: "grab"
+          },
+          onclick: {
+            enable: true,
+            mode: "push"
+          },
+          resize: true
+        },
+        modes: {
+          grab: {
+            distance: 140,
+            line_linked: {
+              opacity: 0.5
+            }
+          },
+          bubble: {
+            distance: 400,
+            size: 40,
+            duration: 2,
+            opacity: 8,
+            speed: 3
+          },
+          repulse: {
+            distance: 200,
+            duration: 0.4
+          },
+          push: {
+            particles_nb: 4
+          },
+          remove: {
+            particles_nb: 2
+          }
+        }
+      },
+      retina_detect: true
+    });
+  </script>
+</body>
+</html>
